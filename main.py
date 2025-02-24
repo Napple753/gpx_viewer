@@ -23,7 +23,8 @@ for filename in os.listdir(input_folder):
                             if point.time and prev_point.time:
                                 time_diff = (point.time - prev_point.time).total_seconds()
                                 distance = point.distance_3d(prev_point)
-                                speed = distance / time_diff if (time_diff > 0) and distance is not None else 0
+                                speed_mps = distance / time_diff if (time_diff > 0) and distance is not None else 0
+                                speed = speed_mps * 3600/1000
                             else:
                                 speed = 0
                         else:
