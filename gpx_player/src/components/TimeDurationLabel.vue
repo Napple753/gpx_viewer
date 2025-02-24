@@ -35,13 +35,13 @@ watch(
 </script>
 
 <template>
-  <span style="min-width: 2.5ex">{{ hours }}</span>
+  <span style="min-width: 2ex">{{ hours }}</span>
   :
-  <span style="min-width: 2.5ex">{{ minutes }}</span>
+  <span style="min-width: 2ex">{{ minutes }}</span>
   :
-  <span style="min-width: 2.5ex">{{ seconds }}</span>
+  <span style="min-width: 2ex">{{ seconds }}</span>
   .
-  <span style="min-width: 2.5ex">{{ ms }}</span>
+  <span style="min-width: 2ex">{{ ms }}</span>
 </template>
 
 <style scoped>

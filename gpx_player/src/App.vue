@@ -2,6 +2,7 @@
 import { ref, watch } from "vue";
 import SeekBar from "./components/SeekBar.vue";
 import TrajectoryViewer from "./components/TrajectoryViewer.vue";
+import { gpx2jsobj } from "./gpx2jsobj";
 
 const playing_ts = ref(0);
 const min_ts = ref(0);
@@ -12,9 +13,10 @@ const trajectory_data = ref({
 });
 
 // Load the points data
-fetch("/points_data.json")
-  .then((response) => response.json())
-  .then((data) => {
+fetch("/points_data.gpx")
+  .then((response) => response.text())
+  .then((xmlText) => {
+    const data = gpx2jsobj(xmlText);
     trajectory_data.value = data;
 
     // // Set the min and max values for the time slider

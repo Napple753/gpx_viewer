@@ -83,3 +83,5 @@ target/
 # Userdata
 input
 output
+
+.DS_Store

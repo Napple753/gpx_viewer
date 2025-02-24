@@ -42,10 +42,9 @@ setInterval(() => {
         :min="min_ts"
         :max="max_ts"
       />
-      <time-duration-label
-        class="remainingTime"
-        :duration="max_ts - (model || 0)"
-      ></time-duration-label>
+      <div class="remainingTime">
+        <time-duration-label :duration="max_ts - (model || 0)" />
+      </div>
     </div>
     <div class="controlsWrapper">
       <div>
@@ -79,7 +78,9 @@ setInterval(() => {
   width: 100%;
 }
 .remainingTime {
-  width: 120px;
+  width: 150px;
+  margin: 0;
+  padding: 0;
 }
 .controlsWrapper {
   display: flex;
