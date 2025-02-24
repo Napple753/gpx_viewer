@@ -32,10 +32,8 @@ export function gpx2jsobj(gpx: string) {
       const distance = getDistance(point, prevPoint) || 0;
       const timeDiff = point.time - prevPoint.time;
       point.spd = (distance / timeDiff) * 3600;
-      console.log(point.spd);
     }
   });
-  console.log(points);
   return {
     points,
   };

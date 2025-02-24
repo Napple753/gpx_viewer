@@ -30,6 +30,12 @@ setInterval(() => {
     model.value = new_val;
   }
 }, 100);
+
+function togglePlaying() {
+  playing.value = !playing.value;
+}
+
+defineExpose({ togglePlaying });
 </script>
 
 <template>
@@ -66,6 +72,8 @@ setInterval(() => {
 <style scoped>
 .wrapper {
   height: 60px;
+  width: 100vw;
+  user-select: none;
 }
 .seekBarWrapper {
   box-sizing: border-box;

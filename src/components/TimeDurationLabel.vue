@@ -35,18 +35,11 @@ watch(
 </script>
 
 <template>
-  <span style="min-width: 2ex">{{ hours }}</span>
-  :
-  <span style="min-width: 2ex">{{ minutes }}</span>
-  :
-  <span style="min-width: 2ex">{{ seconds }}</span>
-  .
-  <span style="min-width: 2ex">{{ ms }}</span>
+  <span>{{ hours }}:{{ minutes }}:{{ seconds }}.{{ ms }}</span>
 </template>
 
 <style scoped>
 span {
-  display: inline-block;
-  text-align: right;
+  font-family: Menlo, Monaco, "Courier New", monospace;
 }
 </style>

@@ -11,28 +11,20 @@ const date = computed(() =>
 </script>
 
 <template>
-  <span>{{ date?.getFullYear() || 0 }}</span>
-  /
-  <span>{{ date ? ("0" + (date.getMonth() + 1)).slice(-2) : "00" }}</span>
-  /
-  <span>{{ ("0" + (date?.getDate() || 0)).slice(-2) }}</span>
-  &nbsp;
-  <span style="min-width: 2.5ex">{{
-    ("0" + (date?.getHours() || 0)).slice(-2)
-  }}</span>
-  :
-  <span style="min-width: 2.5ex">{{
-    ("0" + (date?.getMinutes() || 0)).slice(-2)
-  }}</span>
-  :
-  <span style="min-width: 2.5ex">{{
-    ("0" + (date?.getSeconds() || 0)).slice(-2)
+  <span>{{
+    date?.toLocaleString("ja-JP", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+    }) || ""
   }}</span>
 </template>
 
 <style scoped>
 span {
-  display: inline-block;
-  text-align: right;
+  font-family: Menlo, Monaco, "Courier New", monospace;
 }
 </style>
