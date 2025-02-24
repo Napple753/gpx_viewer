@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import * as L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { onMounted, watch } from "vue";
+import DateTimeLabel from "./DateTimeLabel.vue";
+import { onMounted, watch, ref } from "vue";
+import type { Ref } from "vue";
 
 const props = defineProps<{
   playing_ts: number;
@@ -18,14 +20,22 @@ const props = defineProps<{
 
 let marker: L.Marker | undefined;
 let map: L.Map | undefined;
+const currentElevation: Ref<number | undefined> = ref(undefined);
+const currentSpeed: Ref<number | undefined> = ref(undefined);
 
 onMounted(() => {
   // Initialize the map
-  map = L.map("map").setView([0, 0], 2);
+  map = L.map("viewer_map").setView([0, 0], 2);
   // Add OpenStreetMap tiles
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
     maxZoom: 19,
   }).addTo(map);
+  L.control
+    .scale({
+      imperial: false,
+      metric: true,
+    })
+    .addTo(map);
 
   loadTrajectory();
 });
@@ -108,14 +118,67 @@ function refreshMap() {
 
   const point = points[currentIndex];
   marker?.setLatLng([point.lat, point.lng]);
-  console.log(point.spd);
+
+  currentElevation.value = point.ele;
+  currentSpeed.value = point.spd;
 
   previousIndex = currentIndex;
 }
 </script>
 
 <template>
-  <div id="viewer_map"></div>
+  <div class="wrapper">
+    <div id="viewer_map"></div>
+    <div
+      class="map_info"
+      v-if="currentSpeed !== undefined && currentElevation !== undefined"
+    >
+      <date-time-label :timestamp="props.playing_ts"></date-time-label>
+      <div style="display: flex">
+        <div style="width: 100%; margin-right: 15px">
+          <div class="dt">Speed:</div>
+          <div class="dd">{{ Math.round(currentSpeed) }} km/h</div>
+        </div>
+        <div style="width: 100%">
+          <div class="dt">Elevation:</div>
+          <div class="dd">{{ Math.round(currentElevation) }} m</div>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.wrapper {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+}
+#viewer_map {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  z-index: 0;
+}
+.map_info {
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  z-index: 1;
+  background-color: white;
+  color: gray;
+  opacity: 0.8;
+  border-radius: 10px;
+  padding: 0 10px;
+  width: 250px;
+}
+.map_info .dt {
+  font-size: 15px;
+  text-align: left;
+}
+.map_info .dd {
+  font-size: 20px;
+  text-align: right;
+}
+</style>

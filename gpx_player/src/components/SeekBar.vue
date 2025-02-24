@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import DateTimeLabel from "./DateTimeLabel.vue";
+import TimeDurationLabel from "./TimeDurationLabel.vue";
 const model = defineModel<number>();
 
 const props = defineProps<{
@@ -21,37 +22,71 @@ const playing = ref(false);
 
 setInterval(() => {
   if (playing.value && model.value) {
-    model.value += 100 * playSpeed.value;
-
-    if (model.value > props.max_ts) {
-      model.value = props.max_ts;
+    let new_val = model.value + 100 * playSpeed.value;
+    if (new_val > props.max_ts) {
+      new_val = props.max_ts;
       playing.value = false;
     }
+    model.value = new_val;
   }
 }, 100);
 </script>
 
 <template>
-  <div id="control">
-    <button @click="playing = !playing">
-      {{ playing ? "Pause" : "Play" }}
-    </button>
-    <input
-      type="range"
-      v-model.number="model"
-      :min="min_ts"
-      :max="max_ts"
-      style="width: auto"
-    />
-    <select v-model="playSpeed">
-      <option v-for="item in playSpeedOptions" v-bind:value="item.number">
-        {{ item.title }}
-      </option>
-    </select>
-    <div><date-time-label :timestamp="min_ts"></date-time-label></div>
-    <div><date-time-label :timestamp="max_ts"></date-time-label></div>
-    <div><date-time-label :timestamp="model"></date-time-label></div>
+  <div class="wrapper">
+    <div class="seekBarWrapper">
+      <input
+        class="seekBar"
+        type="range"
+        v-model.number="model"
+        :min="min_ts"
+        :max="max_ts"
+      />
+      <time-duration-label
+        class="remainingTime"
+        :duration="max_ts - (model || 0)"
+      ></time-duration-label>
+    </div>
+    <div class="controlsWrapper">
+      <div>
+        <button @click="playing = !playing">
+          {{ playing ? "Pause" : "Play" }}
+        </button>
+      </div>
+      <div>
+        <select v-model="playSpeed">
+          <option v-for="item in playSpeedOptions" v-bind:value="item.number">
+            {{ item.title }}
+          </option>
+        </select>
+      </div>
+    </div>
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.wrapper {
+  height: 60px;
+}
+.seekBarWrapper {
+  box-sizing: border-box;
+  width: 100%;
+  height: 20px;
+  padding: 0 10px;
+  display: flex;
+}
+.seekBar {
+  width: 100%;
+}
+.remainingTime {
+  width: 120px;
+}
+.controlsWrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0 10px;
+}
+</style>

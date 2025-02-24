@@ -32,14 +32,16 @@ watch(
 </script>
 
 <template>
-  <div id="map">
-    <trajectory-viewer
-      :playing_ts="playing_ts"
-      :trajectory_data="trajectory_data"
-    />
-  </div>
-  <div id="control">
-    <seek-bar v-model="playing_ts" :min_ts="min_ts" :max_ts="max_ts" />
+  <div class="map_wrapper">
+    <div id="map">
+      <trajectory-viewer
+        :playing_ts="playing_ts"
+        :trajectory_data="trajectory_data"
+      />
+    </div>
+    <div id="control">
+      <seek-bar v-model="playing_ts" :min_ts="min_ts" :max_ts="max_ts" />
+    </div>
   </div>
 </template>
 
@@ -54,15 +56,16 @@ body,
   width: 100%;
   overflow: hidden;
 }
-/* body {
+</style>
+<style scoped>
+.map_wrapper {
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-  height: 100vh;
-} */
+  height: 100%;
+  width: 100%;
+}
 #map {
   width: 100%;
-  height: 80vh;
+  height: 100%;
 }
 </style>
