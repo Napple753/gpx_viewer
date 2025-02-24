@@ -1,13 +1,13 @@
 import os
 import gpxpy
 import folium
+from datetime import datetime
+import json
 
 # GPXファイルが格納されているフォルダ
 input_folder = os.path.join(os.path.dirname(__file__), 'input')
 
-# 地図の初期設定
-map_center = [0, 0]
-mymap = folium.Map(location=map_center, zoom_start=2)
+points_data = []
 
 # フォルダ内の最初のGPXファイルのみを読み込む
 for filename in os.listdir(input_folder):
@@ -17,15 +17,38 @@ for filename in os.listdir(input_folder):
             gpx = gpxpy.parse(gpx_file)
             for track in gpx.tracks:
                 for segment in track.segments:
-                    for point in segment.points:
-                        folium.Marker(
-                            location=[point.latitude, point.longitude],
-                            popup=f'Lat: {point.latitude}, Lon: {point.longitude}'
-                        ).add_to(mymap)
+                    for i, point in enumerate(segment.points):
+                        if i > 0:
+                            prev_point = segment.points[i - 1]
+                            if point.time and prev_point.time:
+                                time_diff = (point.time - prev_point.time).total_seconds()
+                                distance = point.distance_3d(prev_point)
+                                speed = distance / time_diff if (time_diff > 0) and distance is not None else 0
+                            else:
+                                speed = 0
+                        else:
+                            speed = 0
+                        points_data.append({
+                            'time': point.time,
+                            'lat': point.latitude,
+                            'lng': point.longitude,
+                            'ele': point.elevation,
+                            'spd': speed
+                        })
         break  # 最初のGPXファイルのみ処理するためループを抜ける
 
-# 地図をHTMLファイルとして保存
+# 出力フォルダ
 output_folder = os.path.join(os.path.dirname(__file__), 'output')
-if not os.path.exists(output_folder):
-    os.makedirs(output_folder)
-mymap.save(os.path.join(output_folder, 'map.html'))
+os.makedirs(output_folder, exist_ok=True)
+
+# 出力ファイルパス
+output_filepath = os.path.join(output_folder, 'points_data.json')
+
+# 出力用オブジェクト
+output_obj = {
+    'points': points_data
+}
+
+# points_dataをJSON形式で出力
+with open(output_filepath, 'w') as json_file:
+    json.dump(output_obj, json_file, default=str, ensure_ascii=False, indent=4)
