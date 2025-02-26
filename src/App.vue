@@ -6,7 +6,7 @@ import GPXViewer from "./components/GPXViewer.vue";
 
 const trajectory_data = ref<{ points: GPXPoint[] } | null>(null);
 // Load the points data
-fetch("/points_data.gpx")
+fetch(import.meta.env.BASE_URL + "/points_data.gpx")
   .then((response) => response.text())
   .then((xmlText) => {
     trajectory_data.value = gpx2jsobj(xmlText);
