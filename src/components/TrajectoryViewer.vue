@@ -26,7 +26,7 @@ const currentSpeed: Ref<number | undefined> = ref(undefined);
 onMounted(() => {
   // Initialize the map
   map = L.map("viewer_map", {
-    //keyboard: false,
+    keyboard: false,
   }).setView([0, 0], 2);
   // Add OpenStreetMap tiles
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
@@ -56,7 +56,6 @@ watch(
   }
 );
 
-let trajectoryLoaded = false;
 function loadTrajectory() {
   if (map === undefined || props.trajectory_data.points.length === 0) return;
   const points = props.trajectory_data.points;
@@ -79,8 +78,6 @@ function loadTrajectory() {
   });
   // Fit the map view to the polyline
   map.fitBounds(polyline.getBounds());
-
-  trajectoryLoaded = true;
   refreshMap();
 }
 
@@ -88,12 +85,7 @@ let trajectoryPolyline: L.Polyline | undefined;
 let previousIndex = 0;
 
 function refreshMap() {
-  if (
-    map === undefined ||
-    props.trajectory_data.points.length === 0 ||
-    trajectoryLoaded === false
-  )
-    return;
+  if (map === undefined || props.trajectory_data.points.length === 0) return;
 
   const points = props.trajectory_data.points;
   const currentIndex = (() => {

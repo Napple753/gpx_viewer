@@ -1,18 +1,13 @@
 import GeographicLib from "geographiclib";
+import type { GPXPoint } from "./types";
 
 export function gpx2jsobj(gpx: string) {
   const parser = new DOMParser();
   const gpxData = parser.parseFromString(gpx, "application/xml");
   const pointDOMs = gpxData.querySelectorAll("trkpt");
 
-  const points: {
-    lat: number;
-    lng: number;
-    time: number;
-    ele: number;
-    spd: number;
-  }[] = [];
-  pointDOMs.forEach((pointDOM, idx) => {
+  const points: GPXPoint[] = [];
+  pointDOMs.forEach((pointDOM) => {
     /* @ts-ignore */
     points.push({
       /* @ts-ignore */
@@ -39,10 +34,7 @@ export function gpx2jsobj(gpx: string) {
   };
 }
 
-function getDistance(
-  point1: { lat: number; lng: number },
-  point2: { lat: number; lng: number }
-) {
+function getDistance(point1: GPXPoint, point2: GPXPoint) {
   const geod = GeographicLib.Geodesic.WGS84;
 
   const result = geod.Inverse(point1.lat, point1.lng, point2.lat, point2.lng);

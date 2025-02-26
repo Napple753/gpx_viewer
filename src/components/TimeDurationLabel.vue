@@ -22,7 +22,7 @@ watch(
     }
 
     const h = Math.floor(props.duration / (60 * 60 * 1000));
-    hours.value = ("00" + h).slice(-2);
+    hours.value = h + "";
     let remaining = props.duration % (60 * 60 * 1000);
     const m = Math.floor(remaining / (60 * 1000));
     minutes.value = ("00" + m).slice(-2);
@@ -35,7 +35,7 @@ watch(
 </script>
 
 <template>
-  <span>{{ hours }}:{{ minutes }}:{{ seconds }}.{{ ms }}</span>
+  <span>{{ hours }}:{{ minutes }}:{{ seconds }}</span>
 </template>
 
 <style scoped>

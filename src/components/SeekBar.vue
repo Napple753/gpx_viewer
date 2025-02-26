@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import DateTimeLabel from "./DateTimeLabel.vue";
 import TimeDurationLabel from "./TimeDurationLabel.vue";
-const model = defineModel<number>();
+const playing_ts = defineModel<number>("playing_ts");
+const play_speed = defineModel<number>("play_speed");
 
 const props = defineProps<{
   min_ts: number;
   max_ts: number;
+  playing: boolean;
 }>();
 
 const playSpeedOptions = [
@@ -16,26 +17,7 @@ const playSpeedOptions = [
   { title: "10000x", number: 10000 },
 ];
 
-const playSpeed = ref(100);
-
-const playing = ref(false);
-
-setInterval(() => {
-  if (playing.value && model.value) {
-    let new_val = model.value + 100 * playSpeed.value;
-    if (new_val > props.max_ts) {
-      new_val = props.max_ts;
-      playing.value = false;
-    }
-    model.value = new_val;
-  }
-}, 100);
-
-function togglePlaying() {
-  playing.value = !playing.value;
-}
-
-defineExpose({ togglePlaying });
+const emit = defineEmits(["togglePlaying"]);
 </script>
 
 <template>
@@ -44,22 +26,22 @@ defineExpose({ togglePlaying });
       <input
         class="seekBar"
         type="range"
-        v-model.number="model"
+        v-model="playing_ts"
         :min="min_ts"
         :max="max_ts"
       />
       <div class="remainingTime">
-        <time-duration-label :duration="max_ts - (model || 0)" />
+        <time-duration-label :duration="max_ts - (playing_ts || 0)" />
       </div>
     </div>
-    <div class="controlsWrapper">
+    <div class="controlsWrapper" @keydown.prevent>
       <div>
-        <button @click="playing = !playing">
+        <button @click="emit('togglePlaying')">
           {{ playing ? "Pause" : "Play" }}
         </button>
       </div>
       <div>
-        <select v-model="playSpeed">
+        <select v-model="play_speed">
           <option v-for="item in playSpeedOptions" v-bind:value="item.number">
             {{ item.title }}
           </option>
@@ -74,6 +56,7 @@ defineExpose({ togglePlaying });
   height: 60px;
   width: 100vw;
   user-select: none;
+  overflow: hidden;
 }
 .seekBarWrapper {
   box-sizing: border-box;
@@ -85,10 +68,14 @@ defineExpose({ togglePlaying });
 .seekBar {
   width: 100%;
 }
+.seekBar:focus-visible {
+  outline: none;
+}
 .remainingTime {
-  width: 150px;
+  width: 100px;
   margin: 0;
   padding: 0;
+  text-align: right;
 }
 .controlsWrapper {
   display: flex;
