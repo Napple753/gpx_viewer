@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { GPXPoint } from "./types";
+import type { GPXPoint } from "./types";
 import { gpx2jsobj } from "./gpx2jsobj";
 import GPXViewer from "./components/GPXViewer.vue";
 

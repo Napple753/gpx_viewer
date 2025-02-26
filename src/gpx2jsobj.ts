@@ -1,4 +1,4 @@
-import GeographicLib from "geographiclib";
+import geodesic from "geographiclib-geodesic";
 import type { GPXPoint } from "./types";
 
 export function gpx2jsobj(gpx: string) {
@@ -35,7 +35,7 @@ export function gpx2jsobj(gpx: string) {
 }
 
 function getDistance(point1: GPXPoint, point2: GPXPoint) {
-  const geod = GeographicLib.Geodesic.WGS84;
+  const geod = geodesic.Geodesic.WGS84;
 
   const result = geod.Inverse(point1.lat, point1.lng, point2.lat, point2.lng);
   return result.s12;

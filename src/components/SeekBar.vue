@@ -1,10 +1,9 @@
 <script setup lang="ts">
-import { ref } from "vue";
 import TimeDurationLabel from "./TimeDurationLabel.vue";
 const playing_ts = defineModel<number>("playing_ts");
 const play_speed = defineModel<number>("play_speed");
 
-const props = defineProps<{
+defineProps<{
   min_ts: number;
   max_ts: number;
   playing: boolean;
