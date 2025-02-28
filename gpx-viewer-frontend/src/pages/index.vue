@@ -1,14 +1,15 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import type { GPXPoint } from "./types";
-import { gpx2jsobj } from "./gpx2jsobj";
-import GPXViewer from "./components/GPXViewer.vue";
+import type { GPXPoint } from "../types";
+import { gpx2jsobj } from "../gpx2jsobj";
+import GPXViewer from "../components/GPXViewer.vue";
 
 const trajectory_data = ref<{ points: GPXPoint[] } | null>(null);
 // Load the points data
 fetch(import.meta.env.BASE_URL + "/points_data.gpx")
   .then((response) => response.text())
   .then((xmlText) => {
+    console.log(xmlText);
     trajectory_data.value = gpx2jsobj(xmlText);
   });
 </script>
