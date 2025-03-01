@@ -6,8 +6,8 @@ import { onMounted, watch, ref } from "vue";
 import type { Ref } from "vue";
 
 const props = defineProps<{
-  playing_ts: number;
-  trajectory_data: {
+  playingTS: number;
+  trajectoryData: {
     points: {
       lat: number;
       lng: number;
@@ -43,22 +43,22 @@ onMounted(() => {
 });
 
 watch(
-  () => props.playing_ts,
+  () => props.playingTS,
   () => {
     refreshMap();
-  }
+  },
 );
 
 watch(
-  () => props.trajectory_data,
+  () => props.trajectoryData,
   () => {
     loadTrajectory();
-  }
+  },
 );
 
 function loadTrajectory() {
-  if (map === undefined || props.trajectory_data.points.length === 0) return;
-  const points = props.trajectory_data.points;
+  if (map === undefined || props.trajectoryData.points.length === 0) return;
+  const points = props.trajectoryData.points;
 
   // Create a marker and add it to the map
   if (marker === undefined) {
@@ -85,11 +85,11 @@ let trajectoryPolyline: L.Polyline | undefined;
 let previousIndex = 0;
 
 function refreshMap() {
-  if (map === undefined || props.trajectory_data.points.length === 0) return;
+  if (map === undefined || props.trajectoryData.points.length === 0) return;
 
-  const points = props.trajectory_data.points;
+  const points = props.trajectoryData.points;
   const currentIndex = (() => {
-    let idx = points.findIndex((point) => point.time >= props.playing_ts);
+    let idx = points.findIndex((point) => point.time >= props.playingTS);
     if (idx === -1) {
       idx = points.length - 1;
     }
@@ -99,7 +99,7 @@ function refreshMap() {
   if (trajectoryPolyline === undefined) {
     // first time
     trajectoryPolyline = L.polyline([], { color: "blue", opacity: 0.8 }).addTo(
-      map
+      map,
     );
     points.slice(0, currentIndex + 1).forEach((point) => {
       trajectoryPolyline?.addLatLng([point.lat, point.lng]);
@@ -129,22 +129,30 @@ function refreshMap() {
 
 <template>
   <div class="wrapper">
-    <div id="viewer_map"></div>
+    <div id="viewer_map" />
     <div
-      class="map_info"
       v-if="currentSpeed !== undefined && currentElevation !== undefined"
+      class="map_info"
     >
       <div style="text-align: left">
-        <date-time-label :timestamp="props.playing_ts"></date-time-label>
+        <date-time-label :timestamp="props.playingTS" />
       </div>
       <div style="display: flex">
         <div style="width: 100%; margin-right: 15px">
-          <div class="dt">Speed:</div>
-          <div class="dd">{{ Math.round(currentSpeed) }} km/h</div>
+          <div class="dt">
+            Speed:
+          </div>
+          <div class="dd">
+            {{ Math.round(currentSpeed) }} km/h
+          </div>
         </div>
         <div style="width: 100%">
-          <div class="dt">Elevation:</div>
-          <div class="dd">{{ Math.round(currentElevation) }} m</div>
+          <div class="dt">
+            Elevation:
+          </div>
+          <div class="dd">
+            {{ Math.round(currentElevation) }} m
+          </div>
         </div>
       </div>
     </div>

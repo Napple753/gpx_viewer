@@ -4,8 +4,8 @@ const playing_ts = defineModel<number>("playing_ts");
 const play_speed = defineModel<number>("play_speed");
 
 defineProps<{
-  min_ts: number;
-  max_ts: number;
+  minTS: number;
+  maxTS: number;
   playing: boolean;
 }>();
 
@@ -23,17 +23,20 @@ const emit = defineEmits(["togglePlaying"]);
   <div class="wrapper">
     <div class="seekBarWrapper">
       <input
+        v-model="playing_ts"
         class="seekBar"
         type="range"
-        v-model="playing_ts"
-        :min="min_ts"
-        :max="max_ts"
-      />
+        :min="minTS"
+        :max="maxTS"
+      >
       <div class="remainingTime">
-        <time-duration-label :duration="max_ts - (playing_ts || 0)" />
+        <time-duration-label :duration="maxTS - (playing_ts || 0)" />
       </div>
     </div>
-    <div class="controlsWrapper" @keydown.prevent>
+    <div
+      class="controlsWrapper"
+      @keydown.prevent
+    >
       <div>
         <button @click="emit('togglePlaying')">
           {{ playing ? "Pause" : "Play" }}
@@ -41,7 +44,11 @@ const emit = defineEmits(["togglePlaying"]);
       </div>
       <div>
         <select v-model="play_speed">
-          <option v-for="item in playSpeedOptions" v-bind:value="item.number">
+          <option
+            v-for="item in playSpeedOptions"
+            :key="item.number"
+            :value="item.number"
+          >
             {{ item.title }}
           </option>
         </select>

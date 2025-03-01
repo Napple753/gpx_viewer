@@ -6,10 +6,10 @@ import { TimelinePlayer } from "../timelinePlayer";
 import type { GPXPoint } from "../types";
 
 const props = defineProps<{
-  trajectory_data: { points: GPXPoint[] };
+  trajectoryData: { points: GPXPoint[] };
 }>();
 
-const points = props.trajectory_data.points;
+const points = props.trajectoryData.points;
 const min_ts = points[0].time;
 const max_ts = points[points.length - 1].time;
 
@@ -60,20 +60,20 @@ function updatePlayingSpeed(speed: number | undefined) {
   <div class="map_wrapper">
     <div id="map">
       <trajectory-viewer
-        :playing_ts="playing_ts"
-        :trajectory_data="trajectory_data"
+        :playing-t-s="playing_ts"
+        :trajectory-data="trajectoryData"
       />
     </div>
     <div id="control">
       <seek-bar
         :playing_ts="playing_ts"
-        @update:playing_ts="updatePlayingTs"
         :play_speed="play_speed"
-        @update:play_speed="updatePlayingSpeed"
-        :min_ts="min_ts"
-        :max_ts="max_ts"
+        :min-t-s="min_ts"
+        :max-t-s="max_ts"
         :playing="isPlaying"
-        @togglePlaying="togglePlaying"
+        @update:playing_ts="updatePlayingTs"
+        @update:play_speed="updatePlayingSpeed"
+        @toggle-playing="togglePlaying"
       />
     </div>
   </div>

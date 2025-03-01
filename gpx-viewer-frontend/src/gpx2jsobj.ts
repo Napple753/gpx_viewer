@@ -8,7 +8,6 @@ export function gpx2jsobj(gpx: string) {
 
   const points: GPXPoint[] = [];
   pointDOMs.forEach((pointDOM) => {
-    /* @ts-ignore */
     points.push({
       /* @ts-ignore */
       lat: parseFloat(pointDOM.getAttribute("lat")),

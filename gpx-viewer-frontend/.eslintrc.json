@@ -1,0 +1,12 @@
+{
+  "extends": ["prettier"],
+  "env": {
+    "browser": true,
+    "es2021": true,
+    "vue/setup-compiler-macros": true
+  },
+  "parserOptions": {
+    "ecmaVersion": 12
+  },
+  "rules": {}
+}

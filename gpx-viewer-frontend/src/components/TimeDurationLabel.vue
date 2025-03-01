@@ -8,7 +8,7 @@ const props = defineProps<{
 const hours: Ref<string> = ref("--");
 const minutes: Ref<string> = ref("--");
 const seconds: Ref<string> = ref("--");
-const ms: Ref<String> = ref("--");
+const ms: Ref<string> = ref("--");
 
 watch(
   () => props.duration,
