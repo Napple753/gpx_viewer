@@ -31,6 +31,8 @@ onMounted(() => {
   // Add OpenStreetMap tiles
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
     maxZoom: 19,
+    attribution:
+      '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
   }).addTo(map);
   L.control
     .scale({
@@ -139,20 +141,12 @@ function refreshMap() {
       </div>
       <div style="display: flex">
         <div style="width: 100%; margin-right: 15px">
-          <div class="dt">
-            Speed:
-          </div>
-          <div class="dd">
-            {{ Math.round(currentSpeed) }} km/h
-          </div>
+          <div class="dt">Speed:</div>
+          <div class="dd">{{ Math.round(currentSpeed) }} km/h</div>
         </div>
         <div style="width: 100%">
-          <div class="dt">
-            Elevation:
-          </div>
-          <div class="dd">
-            {{ Math.round(currentElevation) }} m
-          </div>
+          <div class="dt">Elevation:</div>
+          <div class="dd">{{ Math.round(currentElevation) }} m</div>
         </div>
       </div>
     </div>

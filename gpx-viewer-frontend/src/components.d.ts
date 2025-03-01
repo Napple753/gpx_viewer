@@ -8,12 +8,14 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     AppFooter: typeof import('./components/AppFooter.vue')['default']
+    copy: typeof import('./components/SeekBar copy.vue')['default']
     DateTimeLabel: typeof import('./components/DateTimeLabel.vue')['default']
     GPXViewer: typeof import('./components/GPXViewer.vue')['default']
     HelloWorld: typeof import('./components/HelloWorld.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     SeekBar: typeof import('./components/SeekBar.vue')['default']
+    SpeedControl: typeof import('./components/SpeedControl.vue')['default']
     TimeDurationLabel: typeof import('./components/TimeDurationLabel.vue')['default']
     TrajectoryViewer: typeof import('./components/TrajectoryViewer.vue')['default']
   }

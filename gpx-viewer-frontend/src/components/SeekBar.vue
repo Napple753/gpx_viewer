@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import TimeDurationLabel from "./TimeDurationLabel.vue";
+import SpeedControl from "./SpeedControl.vue";
 const playing_ts = defineModel<number>("playing_ts");
 const play_speed = defineModel<number>("play_speed");
 
@@ -16,7 +17,13 @@ const playSpeedOptions = [
   { title: "10000x", number: 10000 },
 ];
 
-const emit = defineEmits(["togglePlaying"]);
+const emit = defineEmits([
+  "togglePlaying",
+  "rewindPlayingTs",
+  "fastForwardPlayingTs",
+]);
+
+const showSpeedControl = ref(false);
 </script>
 
 <template>
@@ -28,46 +35,55 @@ const emit = defineEmits(["togglePlaying"]);
         type="range"
         :min="minTS"
         :max="maxTS"
-      >
+      />
       <div class="remainingTime">
         <time-duration-label :duration="maxTS - (playing_ts || 0)" />
       </div>
     </div>
-    <div
-      class="controlsWrapper"
-      @keydown.prevent
-    >
+    <div class="controlsWrapper" @keydown.prevent>
       <div>
-        <button @click="emit('togglePlaying')">
-          {{ playing ? "Pause" : "Play" }}
-        </button>
+        <v-btn @click="emit('togglePlaying')" icon>
+          <v-icon>{{ playing ? "mdi-pause" : "mdi-play" }}</v-icon>
+        </v-btn>
+        <v-btn @click="emit('rewindPlayingTs')" icon size="small">
+          <v-icon>mdi-rewind</v-icon>
+        </v-btn>
+        <v-btn @click="emit('fastForwardPlayingTs')" icon size="small">
+          <v-icon>mdi-fast-forward</v-icon>
+        </v-btn>
       </div>
       <div>
-        <select v-model="play_speed">
-          <option
-            v-for="item in playSpeedOptions"
-            :key="item.number"
-            :value="item.number"
-          >
-            {{ item.title }}
-          </option>
-        </select>
+        <v-btn @click="showSpeedControl = !showSpeedControl" icon>
+          <v-icon>mdi-speedometer</v-icon>
+        </v-btn>
       </div>
     </div>
+    <div class="speedControl" v-show="showSpeedControl">
+      <v-card>
+        <div style="padding: 5px 10px">
+          <speed-control v-model="play_speed" />
+        </div>
+      </v-card>
+    </div>
   </div>
+  <div
+    v-show="showSpeedControl"
+    class="speedControlOverlay"
+    @click="showSpeedControl = false"
+  ></div>
 </template>
 
 <style scoped>
 .wrapper {
-  height: 60px;
-  width: 100vw;
+  height: 78px;
+  width: 100%;
   user-select: none;
-  overflow: hidden;
+  position: relative;
 }
 .seekBarWrapper {
   box-sizing: border-box;
   width: 100%;
-  height: 20px;
+  height: 24px;
   padding: 0 10px;
   display: flex;
 }
@@ -90,5 +106,21 @@ const emit = defineEmits(["togglePlaying"]);
   width: 100%;
   box-sizing: border-box;
   padding: 0 10px;
+}
+
+.speedControl {
+  position: absolute;
+  bottom: calc(100% + 10px);
+  right: 10px;
+  z-index: 1000;
+}
+
+.speedControlOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 100;
+  width: 100%;
+  height: 100vw;
 }
 </style>

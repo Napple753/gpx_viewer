@@ -27,6 +27,13 @@ function togglePlaying() {
   timelinePlayer.togglePlay();
 }
 
+function rewindPlayingTs() {
+  timelinePlayer.jumpFromCurrentPoint(-0.01);
+}
+function fastForwardPlayingTs() {
+  timelinePlayer.jumpFromCurrentPoint(0.01);
+}
+
 window.addEventListener("keydown", function (e: KeyboardEvent) {
   if (e.key === " ") {
     togglePlaying();
@@ -34,9 +41,9 @@ window.addEventListener("keydown", function (e: KeyboardEvent) {
     const ratio = parseInt(e.key);
     timelinePlayer.jumpToPoint(ratio / 10);
   } else if (e.key === "ArrowRight") {
-    timelinePlayer.jumpFromCurrentPoint(0.01);
+    fastForwardPlayingTs();
   } else if (e.key === "ArrowLeft") {
-    timelinePlayer.jumpFromCurrentPoint(-0.01);
+    rewindPlayingTs();
   }
 });
 
@@ -74,6 +81,8 @@ function updatePlayingSpeed(speed: number | undefined) {
         @update:playing_ts="updatePlayingTs"
         @update:play_speed="updatePlayingSpeed"
         @toggle-playing="togglePlaying"
+        @rewind-playing-ts="rewindPlayingTs"
+        @fast-forward-playing-ts="fastForwardPlayingTs"
       />
     </div>
   </div>
@@ -87,7 +96,7 @@ function updatePlayingSpeed(speed: number | undefined) {
   width: 100%;
 }
 #map {
-  width: 100vw;
+  width: 100%;
   height: 100%;
 }
 </style>

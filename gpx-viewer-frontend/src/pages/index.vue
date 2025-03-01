@@ -9,16 +9,12 @@ const trajectory_data = ref<{ points: GPXPoint[] } | null>(null);
 fetch(import.meta.env.BASE_URL + "/points_data.gpx")
   .then((response) => response.text())
   .then((xmlText) => {
-    console.log(xmlText);
     trajectory_data.value = gpx2jsobj(xmlText);
   });
 </script>
 
 <template>
-  <g-p-x-viewer
-    v-if="trajectory_data"
-    :trajectory-data="trajectory_data"
-  />
+  <g-p-x-viewer v-if="trajectory_data" :trajectory-data="trajectory_data" />
 </template>
 
 <style>
@@ -30,7 +26,7 @@ body,
   box-sizing: border-box;
   height: 100vh;
   height: 100dvh;
-  width: 100vw;
+  width: 100%;
   overflow: hidden;
 }
 </style>

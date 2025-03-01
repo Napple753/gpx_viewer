@@ -1,8 +1,5 @@
 <template>
-  <v-footer
-    height="40"
-    app
-  >
+  <v-footer height="40" app>
     <a
       v-for="item in items"
       :key="item.title"
@@ -12,10 +9,7 @@
       rel="noopener noreferrer"
       target="_blank"
     >
-      <v-icon
-        :icon="item.icon"
-        :size="item.icon === '$vuetify' ? 24 : 16"
-      />
+      <v-icon :icon="item.icon" :size="item.icon === '$vuetify' ? 24 : 16" />
     </a>
 
     <div

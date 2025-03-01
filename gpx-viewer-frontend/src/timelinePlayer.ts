@@ -70,9 +70,11 @@ export class TimelinePlayer {
     return this.#play_speed;
   }
   set playSpeed(val: number) {
-    this.#play_speed = val;
-    this.#keypoint_realtime = Date.now();
+    console.log("set play speed", val);
     this.#keypoint_timeline = this.getCurrentTs();
+    this.#keypoint_realtime = Date.now();
+
+    this.#play_speed = val;
   }
   get isPlaying() {
     return this.#isPlaying;
