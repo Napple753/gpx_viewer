@@ -15,7 +15,10 @@ fetch(import.meta.env.BASE_URL + "/points_data.gpx")
 </script>
 
 <template>
-  <g-p-x-viewer v-if="trajectory_data" :trajectory-data="trajectory_data" />
+  <g-p-x-viewer
+    v-if="trajectory_data"
+    :trajectory-data="trajectory_data"
+  />
 </template>
 
 <style>

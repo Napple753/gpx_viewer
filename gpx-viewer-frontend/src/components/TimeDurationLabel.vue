@@ -30,7 +30,7 @@ watch(
     const s = Math.floor(remaining / 1000);
     seconds.value = ("00" + s).slice(-2);
     ms.value = ("00" + (remaining % 1000)).slice(-2);
-  }
+  },
 );
 </script>
 

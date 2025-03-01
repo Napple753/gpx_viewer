@@ -6,7 +6,7 @@ const props = defineProps<{
 }>();
 
 const date = computed(() =>
-  props.timestamp ? new Date(props.timestamp) : undefined
+  props.timestamp ? new Date(props.timestamp) : undefined,
 );
 </script>
 
