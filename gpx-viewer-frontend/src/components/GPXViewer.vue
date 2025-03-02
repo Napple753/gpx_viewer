@@ -3,10 +3,11 @@ import { ref } from "vue";
 import SeekBar from "./SeekBar.vue";
 import TrajectoryViewer from "./TrajectoryViewer.vue";
 import { TimelinePlayer } from "../timelinePlayer";
-import type { GPXPoint } from "../types";
+import type { GPXPoint, MovieData } from "../types";
 
 const props = defineProps<{
   trajectoryData: { points: GPXPoint[] };
+  movieList: MovieData[];
 }>();
 
 const points = props.trajectoryData.points;
@@ -65,11 +66,20 @@ function updatePlayingSpeed(speed: number | undefined) {
 
 <template>
   <div class="map_wrapper">
-    <div id="map">
-      <trajectory-viewer
-        :playing-t-s="playing_ts"
-        :trajectory-data="trajectoryData"
-      />
+    <div class="map_video_wrapper">
+      <div id="map">
+        <trajectory-viewer
+          :playing-t-s="playing_ts"
+          :trajectory-data="trajectoryData"
+          :movie-list="movieList"
+        />
+      </div>
+      <div class="video_wrapper">
+        <display-movie
+          :movie-data="movieList[0]"
+          :playing-t-s="playing_ts"
+        ></display-movie>
+      </div>
     </div>
     <div id="control">
       <seek-bar
@@ -95,7 +105,13 @@ function updatePlayingSpeed(speed: number | undefined) {
   height: 100%;
   width: 100%;
 }
-#map {
+.map_video_wrapper {
+  display: flex;
+  width: 100%;
+  height: 100%;
+}
+#map,
+.video_wrapper {
   width: 100%;
   height: 100%;
 }

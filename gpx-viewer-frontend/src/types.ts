@@ -5,3 +5,9 @@ export type GPXPoint = {
   ele: number;
   spd: number;
 };
+
+export type MovieData = {
+  YouTubeID: string;
+  startTime: number;
+  movieLength: number;
+};

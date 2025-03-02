@@ -4,18 +4,14 @@ import "leaflet/dist/leaflet.css";
 import DateTimeLabel from "./DateTimeLabel.vue";
 import { onMounted, watch, ref } from "vue";
 import type { Ref } from "vue";
+import type { GPXPoint, MovieData } from "@/types";
 
 const props = defineProps<{
   playingTS: number;
   trajectoryData: {
-    points: {
-      lat: number;
-      lng: number;
-      time: number;
-      ele: number;
-      spd: number;
-    }[];
+    points: GPXPoint[];
   };
+  movieList: MovieData[];
 }>();
 
 let marker: L.Marker | undefined;
@@ -34,6 +30,7 @@ onMounted(() => {
     attribution:
       '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
   }).addTo(map);
+
   L.control
     .scale({
       imperial: false,
@@ -71,8 +68,9 @@ function loadTrajectory() {
   const polyline = L.polyline([], {
     color: "lightblue",
     opacity: 0.8,
+    weight: 5,
+    dashArray: "10, 20",
   }).addTo(map);
-  // const traveledPath = L.polyline([], { color: "blue" }).addTo(map);
 
   // Add all points to the polyline
   points.forEach((point) => {
@@ -80,6 +78,37 @@ function loadTrajectory() {
   });
   // Fit the map view to the polyline
   map.fitBounds(polyline.getBounds());
+
+  // movie path
+  props.movieList.forEach((movie) => {
+    if (map === undefined) return;
+
+    const moviePolyline = L.polyline([], {
+      color: "lightblue",
+      opacity: 0.2,
+      weight: 15,
+    }).addTo(map);
+
+    points
+      .filter(
+        (point) =>
+          movie.startTime <= point.time &&
+          point.time <= movie.startTime + movie.movieLength,
+      )
+      .forEach((point) => {
+        moviePolyline.addLatLng([point.lat, point.lng]);
+      });
+
+    // moviePolyline.on("click", () => {
+    //   console.log("clicked");
+    //   //props.playingTS = movie.startTime;
+    //   window.open(
+    //     `https://www.youtube.com/watch?v=${movie.YouTubeID}`,
+    //     "_blank",
+    //   );
+    // });
+  });
+
   refreshMap();
 }
 
@@ -100,9 +129,11 @@ function refreshMap() {
 
   if (trajectoryPolyline === undefined) {
     // first time
-    trajectoryPolyline = L.polyline([], { color: "blue", opacity: 0.8 }).addTo(
-      map,
-    );
+    trajectoryPolyline = L.polyline([], {
+      color: "blue",
+      opacity: 0.8,
+      weight: 5,
+    }).addTo(map);
     points.slice(0, currentIndex + 1).forEach((point) => {
       trajectoryPolyline?.addLatLng([point.lat, point.lng]);
     });
