@@ -75,10 +75,12 @@ function updatePlayingSpeed(speed: number | undefined) {
         />
       </div>
       <div class="video_wrapper">
-        <display-movie
-          :movie-data="movieList[0]"
+        <display-movie-list
+          :playing-speed="play_speed"
+          :isPlaying="isPlaying"
+          :movie-list="movieList"
           :playing-t-s="playing_ts"
-        ></display-movie>
+        ></display-movie-list>
       </div>
     </div>
     <div id="control">
@@ -108,7 +110,7 @@ function updatePlayingSpeed(speed: number | undefined) {
 .map_video_wrapper {
   display: flex;
   width: 100%;
-  height: 100%;
+  height: calc(100vh - 78px);
 }
 #map,
 .video_wrapper {

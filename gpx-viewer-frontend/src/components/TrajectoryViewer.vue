@@ -68,8 +68,8 @@ function loadTrajectory() {
   const polyline = L.polyline([], {
     color: "lightblue",
     opacity: 0.8,
-    weight: 5,
-    dashArray: "10, 20",
+    weight: 2,
+    //dashArray: "10, 20",
   }).addTo(map);
 
   // Add all points to the polyline

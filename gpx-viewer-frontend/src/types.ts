@@ -7,7 +7,7 @@ export type GPXPoint = {
 };
 
 export type MovieData = {
-  YouTubeID: string;
+  fileName: string;
   startTime: number;
   movieLength: number;
 };
