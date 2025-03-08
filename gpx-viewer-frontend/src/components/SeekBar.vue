@@ -2,7 +2,8 @@
 import TimeDurationLabel from "./TimeDurationLabel.vue";
 import SpeedControl from "./SpeedControl.vue";
 const playing_ts = defineModel<number>("playing_ts");
-const play_speed = defineModel<number>("play_speed");
+const movie_speed = defineModel<number>("movie_speed");
+const other_speed = defineModel<number>("other_speed");
 
 defineProps<{
   minTS: number;
@@ -10,17 +11,12 @@ defineProps<{
   playing: boolean;
 }>();
 
-const playSpeedOptions = [
-  { title: "10x", number: 10 },
-  { title: "100x", number: 100 },
-  { title: "1000x", number: 1000 },
-  { title: "10000x", number: 10000 },
-];
-
 const emit = defineEmits([
   "togglePlaying",
   "rewindPlayingTs",
   "fastForwardPlayingTs",
+  "setMovieSpeed",
+  "setOtherSpeed",
 ]);
 
 const showSpeedControl = ref(false);
@@ -40,7 +36,7 @@ const showSpeedControl = ref(false);
         <time-duration-label :duration="maxTS - (playing_ts || 0)" />
       </div>
     </div>
-    <div class="controlsWrapper" @keydown.prevent>
+    <div class="controlsWrapper">
       <div>
         <v-btn @click="emit('togglePlaying')" icon>
           <v-icon>{{ playing ? "mdi-pause" : "mdi-play" }}</v-icon>
@@ -61,7 +57,10 @@ const showSpeedControl = ref(false);
     <div class="speedControl" v-show="showSpeedControl">
       <v-card>
         <div style="padding: 5px 10px">
-          <speed-control v-model="play_speed" />
+          <speed-control
+            v-model:movie_speed="movie_speed"
+            v-model:other_speed="other_speed"
+          />
         </div>
       </v-card>
     </div>

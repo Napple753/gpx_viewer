@@ -16,7 +16,10 @@ const max_ts = points[points.length - 1].time;
 
 const playing_ts = ref(0);
 const isPlaying = ref(false);
-const play_speed = ref(100);
+
+const movie_speed = ref(10);
+const other_speed = ref(1000);
+const play_speed = ref(1000);
 
 const timelinePlayer = new TimelinePlayer({
   start_point: min_ts,
@@ -51,6 +54,13 @@ window.addEventListener("keydown", function (e: KeyboardEvent) {
 setInterval(() => {
   playing_ts.value = timelinePlayer.getCurrentTs();
   isPlaying.value = timelinePlayer.isPlaying;
+
+  if (isPlayMovie()) {
+    timelinePlayer.playSpeed = movie_speed.value;
+  } else {
+    timelinePlayer.playSpeed = other_speed.value;
+  }
+
   play_speed.value = timelinePlayer.playSpeed;
 }, 100);
 
@@ -58,10 +68,27 @@ function updatePlayingTs(ts: number | undefined) {
   if (ts === undefined) return;
   timelinePlayer.setCurrentTs(Number(ts));
 }
-function updatePlayingSpeed(speed: number | undefined) {
-  if (speed === undefined) return;
-  timelinePlayer.playSpeed = Number(speed);
+
+function isPlayMovie() {
+  const playingTS = playing_ts.value;
+  return props.movieList.some(
+    (movie) =>
+      movie.startTime <= playingTS &&
+      playingTS <= movie.startTime + movie.movieLength,
+  );
 }
+
+// function updatePlayingSpeed(speed: number | undefined) {
+//   if (speed === undefined) return;
+//   timelinePlayer.playSpeed = Number(speed);
+// }
+
+watch(
+  () => movie_speed.value,
+  (newVal) => {
+    console.log("movie_speed", newVal);
+  },
+);
 </script>
 
 <template>
@@ -77,21 +104,21 @@ function updatePlayingSpeed(speed: number | undefined) {
       <div class="video_wrapper">
         <display-movie-list
           :playing-speed="play_speed"
-          :isPlaying="isPlaying"
+          :is-playing="isPlaying"
           :movie-list="movieList"
           :playing-t-s="playing_ts"
-        ></display-movie-list>
+        />
       </div>
     </div>
     <div id="control">
       <seek-bar
+        v-model:movie_speed="movie_speed"
+        v-model:other_speed="other_speed"
         :playing_ts="playing_ts"
-        :play_speed="play_speed"
         :min-t-s="min_ts"
         :max-t-s="max_ts"
         :playing="isPlaying"
         @update:playing_ts="updatePlayingTs"
-        @update:play_speed="updatePlayingSpeed"
         @toggle-playing="togglePlaying"
         @rewind-playing-ts="rewindPlayingTs"
         @fast-forward-playing-ts="fastForwardPlayingTs"

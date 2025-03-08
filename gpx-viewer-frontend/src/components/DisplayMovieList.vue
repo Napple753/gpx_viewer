@@ -12,7 +12,7 @@ const props = defineProps<{
 <template>
   <display-movie
     v-for="movie in props.movieList"
-    :key="movie.fileName"
+    :key="movie.fileURL"
     :movie-data="movie"
     :is-playing="props.isPlaying"
     :playing-t-s="props.playingTS"

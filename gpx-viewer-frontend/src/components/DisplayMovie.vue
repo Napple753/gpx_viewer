@@ -30,6 +30,17 @@ const currentTime = computed(() => {
   );
 });
 
+const videoCurrentTime = ref(0);
+
+watch(
+  () => currentTime.value,
+  (newVal) => {
+    if (Math.abs(videoCurrentTime.value - newVal) > 1.2) {
+      videoCurrentTime.value = newVal;
+    }
+  },
+);
+
 const isPlaying = computed(() => {
   return (
     video.value &&
@@ -41,13 +52,10 @@ const isPlaying = computed(() => {
 
 watch(
   () => isPlaying.value,
-  // () => props.isPlaying,
   (newVal, oldVal) => {
     if (newVal && !oldVal) {
-      console.log("play");
       video.value?.play();
     } else {
-      console.log("stop");
       video.value?.pause();
     }
   },
@@ -63,16 +71,22 @@ const playbackRate = computed(() => {
     playbackRateMin,
   );
 });
+
+const isMuted = computed(() => {
+  //return props.playingSpeed > playbackRateMax;
+  return true;
+});
 </script>
 
 <template>
   <video
     v-show="isMovieTime"
     ref="video"
-    :src="`/gpx_viewer/movies/${props.movieData.fileName}`"
-    :currentTime="currentTime"
+    :src="props.movieData.fileURL"
+    :currentTime="videoCurrentTime"
     :playbackRate="playbackRate"
-    muted
+    :muted="isMuted"
+    preload="auto"
   />
 </template>
 
