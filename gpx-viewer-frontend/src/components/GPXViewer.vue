@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import SeekBar from "./SeekBar.vue";
+import PlayerControl from "./PlayerControl.vue";
 import TrajectoryViewer from "./TrajectoryViewer.vue";
 import { TimelinePlayer } from "../timelinePlayer";
 import type { GPXPoint, MovieData } from "../types";
@@ -78,17 +78,10 @@ function isPlayMovie() {
   );
 }
 
-// function updatePlayingSpeed(speed: number | undefined) {
-//   if (speed === undefined) return;
-//   timelinePlayer.playSpeed = Number(speed);
-// }
-
-watch(
-  () => movie_speed.value,
-  (newVal) => {
-    console.log("movie_speed", newVal);
-  },
-);
+const highlitedPoints = ref<GPXPoint[]>([]);
+function annotatePoints(selectedPoints: GPXPoint[]) {
+  highlitedPoints.value = selectedPoints;
+}
 </script>
 
 <template>
@@ -99,6 +92,7 @@ watch(
           :playing-t-s="playing_ts"
           :trajectory-data="trajectoryData"
           :movie-list="movieList"
+          @points-selected="annotatePoints"
         />
       </div>
       <div class="video_wrapper">
@@ -111,13 +105,14 @@ watch(
       </div>
     </div>
     <div id="control">
-      <seek-bar
+      <player-control
         v-model:movie_speed="movie_speed"
         v-model:other_speed="other_speed"
         :playing_ts="playing_ts"
         :min-t-s="min_ts"
         :max-t-s="max_ts"
         :playing="isPlaying"
+        :highlited-points="highlitedPoints"
         @update:playing_ts="updatePlayingTs"
         @toggle-playing="togglePlaying"
         @rewind-playing-ts="rewindPlayingTs"
@@ -137,7 +132,7 @@ watch(
 .map_video_wrapper {
   display: flex;
   width: 100%;
-  height: calc(100vh - 78px);
+  height: calc(100vh - 90px);
 }
 #map,
 .video_wrapper {

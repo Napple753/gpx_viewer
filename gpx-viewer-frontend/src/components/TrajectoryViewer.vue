@@ -5,6 +5,7 @@ import DateTimeLabel from "./DateTimeLabel.vue";
 import { onMounted, watch, ref } from "vue";
 import type { Ref } from "vue";
 import type { GPXPoint, MovieData } from "@/types";
+import { getLocalMinimums } from "@/getLocalMinimum";
 
 const props = defineProps<{
   playingTS: number;
@@ -13,17 +14,21 @@ const props = defineProps<{
   };
   movieList: MovieData[];
 }>();
+const emit = defineEmits<{ pointsSelected: [GPXPoint[]] }>();
 
 let marker: L.Marker | undefined;
 let map: L.Map | undefined;
 const currentElevation: Ref<number | undefined> = ref(undefined);
 const currentSpeed: Ref<number | undefined> = ref(undefined);
+const closestPointsMarkers: L.Marker[] = [];
 
 onMounted(() => {
   // Initialize the map
   map = L.map("viewer_map", {
     keyboard: false,
   }).setView([0, 0], 2);
+  if (map === undefined) return;
+
   // Add OpenStreetMap tiles
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
     maxZoom: 19,
@@ -37,6 +42,44 @@ onMounted(() => {
       metric: true,
     })
     .addTo(map);
+
+  map.on("click", (e: L.LeafletMouseEvent) => {
+    if (map === undefined && props.trajectoryData) return;
+
+    const clickedPoint = e.latlng;
+    const distances = props.trajectoryData.points.map((point) => ({
+      point,
+      distance:
+        map?.distance(clickedPoint, L.latLng(point.lat, point.lng)) ?? Infinity,
+    }));
+    const closestPoints = getLocalMinimums(
+      distances,
+      (d: { point: GPXPoint; distance: number }) => d.distance,
+    )
+      .sort((a, b) => a.distance - b.distance)
+      .slice(0, 3);
+
+    closestPointsMarkers.forEach((marker) => map?.removeLayer(marker));
+    closestPointsMarkers.length = 0;
+
+    closestPoints.forEach((closestPoint) => {
+      closestPointsMarkers.push(
+        L.marker([closestPoint.point.lat, closestPoint.point.lng], {
+          icon: L.icon({
+            iconUrl:
+              "https://maps.gstatic.com/intl/en_us/mapfiles/markers2/measle.png",
+            iconSize: [7, 7],
+            iconAnchor: [3.5, 3.5],
+          }),
+        }).addTo(map),
+      );
+    });
+
+    emit(
+      "pointsSelected",
+      closestPoints.map((p) => p.point),
+    );
+  });
 
   loadTrajectory();
 });
@@ -98,15 +141,6 @@ function loadTrajectory() {
       .forEach((point) => {
         moviePolyline.addLatLng([point.lat, point.lng]);
       });
-
-    // moviePolyline.on("click", () => {
-    //   console.log("clicked");
-    //   //props.playingTS = movie.startTime;
-    //   window.open(
-    //     `https://www.youtube.com/watch?v=${movie.YouTubeID}`,
-    //     "_blank",
-    //   );
-    // });
   });
 
   refreshMap();

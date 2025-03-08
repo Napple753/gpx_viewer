@@ -26,64 +26,6 @@ fetch(import.meta.env.BASE_URL + "/movie_info_list.json")
   .then((json) => {
     movieList.value = json;
   });
-
-// const movieList: MovieData[] = [
-//   {
-//     fileName: "VID_20250215_150007_00_143.mp4",
-//     startTime: new Date("2025-02-15T06:00:48Z").getTime(), //timestamp
-//     movieLength: (2 * 60 + 20) * 1000, //[ms]
-//   },
-//   {
-//     fileName: "VID_20250215_150950_00_144.mp4",
-//     startTime: new Date("2025-02-15T06:09:52Z").getTime(), //timestamp
-//     movieLength:
-//       new Date("2025-02-15T06:15:20Z").getTime() -
-//       new Date("2025-02-15T06:09:52Z").getTime(), //[ms]
-//   },
-//   {
-//     fileName: "VID_20250215_153501_00_145.mp4",
-//     startTime: new Date("2025-02-15T06:35:01Z").getTime(), //timestamp
-//     movieLength:
-//       new Date("2025-02-15T06:41:36Z").getTime() -
-//       new Date("2025-02-15T06:35:01Z").getTime(), //[ms]
-//   },
-//   {
-//     fileName: "VID_20250215_155000_00_146.mp4",
-//     startTime: new Date("2025-02-15T06:50:01Z").getTime(), //timestamp
-//     movieLength:
-//       new Date("2025-02-15T06:52:33Z").getTime() -
-//       new Date("2025-02-15T06:50:01Z").getTime(), //[ms]
-//   },
-//   {
-//     fileName: "VID_20250215_155903_00_147.mp4",
-//     startTime: new Date("2025-02-15T06:59:03Z").getTime(), //timestamp
-//     movieLength:
-//       new Date("2025-02-15T07:01:51Z").getTime() -
-//       new Date("2025-02-15T06:59:03Z").getTime(), //[ms]
-//   },
-//   {
-//     fileName: "VID_20250215_160659_00_148.mp4",
-//     startTime: new Date("2025-02-15T07:06:59Z").getTime(), //timestamp
-//     movieLength:
-//       new Date("2025-02-15T07:08:57Z").getTime() -
-//       new Date("2025-02-15T07:06:59Z").getTime(), //[ms]
-//   },
-
-//   {
-//     fileName: "VID_20250215_161025_00_149.mp4",
-//     startTime: new Date("2025-02-15T07:10:24Z").getTime(), //timestamp
-//     movieLength:
-//       new Date("2025-02-15T07:13:42Z").getTime() -
-//       new Date("2025-02-15T07:10:24Z").getTime(), //[ms]
-//   },
-//   {
-//     fileName: "VID_20250215_162357_00_150.mp4",
-//     startTime: new Date("2025-02-15T07:23:58Z").getTime(), //timestamp
-//     movieLength:
-//       new Date("2025-02-15T07:31:03Z").getTime() -
-//       new Date("2025-02-15T07:23:58Z").getTime(), //[ms]
-//   },
-// ];
 </script>
 
 <template>
